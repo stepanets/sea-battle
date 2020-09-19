@@ -1,0 +1,47 @@
+{
+  "name": "steapnets/sea-battle",
+  "license": [
+    "MIT"
+  ],
+  "description": "Sea Battle game for code review project",
+  "authors": [
+    {
+      "name": "Pavel Stepanets",
+      "email": "pahhan.ne@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4",
+    "elegant-bro/interfaces": "^1.1"
+  },
+  "require-dev": {
+    "ext-simplexml": "*",
+    "php-coveralls/php-coveralls": "^2.2",
+    "phpunit/phpunit": "^5.7 || ^6.4 || ^7.0",
+    "roave/security-advisories": "dev-master",
+    "symfony/cache": "^4.4",
+    "symfony/http-foundation": "^4.4",
+    "symfony/mime": "^4.4",
+    "symplify/easy-coding-standard": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Stepanets\\SeaBattle\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Stepanets\\SeaBattle\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "7.4"
+    },
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
