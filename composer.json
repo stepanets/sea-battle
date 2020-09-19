@@ -12,7 +12,8 @@
   ],
   "require": {
     "php": "^7.4",
-    "elegant-bro/interfaces": "^1.1"
+    "elegant-bro/interfaces": "^1.1",
+    "ext-readline": "*"
   },
   "require-dev": {
     "ext-simplexml": "*",
