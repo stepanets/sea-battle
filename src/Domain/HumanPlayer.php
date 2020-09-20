@@ -23,14 +23,14 @@ final class HumanPlayer implements Player
 
     /**
      * @param Player $enemy
-     * @return int
+     * @return ShootResult
      * @throws Exception
      */
-    public function shoot(Player $enemy): int
+    public function shoot(Player $enemy): ShootResult
     {
-        return $enemy->field()->handleShoot(
-            $this->playerPair()
-        );
+        return (Field::SHOOT_MISS === $res = $enemy->field()->handleShoot(
+                $pair = $this->playerPair()
+            )) ? new ResultMiss($pair) : new ResultDamage($pair);
     }
 
     public function field(): Field
@@ -46,7 +46,6 @@ final class HumanPlayer implements Player
         if ('xt' === $input = readline('Enter coordinate you want shoot (or "xt" to exit the game): ')) {
             throw new DomainException('Player has stopped the game');
         }
-        echo "entered $input\n";
         return Coordinate::fromString($input);
     }
 }

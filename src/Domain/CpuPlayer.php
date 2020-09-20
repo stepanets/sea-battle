@@ -7,6 +7,7 @@ namespace Stepanets\SeaBattle\Domain;
 
 
 use Exception;
+
 use function random_int;
 
 final class CpuPlayer implements Player
@@ -23,14 +24,14 @@ final class CpuPlayer implements Player
 
     /**
      * @param Player $enemy
-     * @return int
+     * @return ShootResult
      * @throws Exception
      */
-    public function shoot(Player $enemy): int
+    public function shoot(Player $enemy): ShootResult
     {
-        return $enemy->field()->handleShoot(
-            $this->generatePair($enemy->field())
-        );
+        return (Field::SHOOT_MISS === $res = $enemy->field()->handleShoot(
+                $pair = $this->generatePair($enemy->field())
+            )) ? new ResultMiss($pair) : new ResultDamage($pair);
     }
 
     public function field(): Field
@@ -39,11 +40,11 @@ final class CpuPlayer implements Player
     }
 
     /**
-     * @param Field $field
+     * @param TargetField $field
      * @return Coordinate
      * @throws Exception
      */
-    private function generatePair(Field $field): Coordinate
+    private function generatePair(TargetField $field): Coordinate
     {
         return new Coordinate(
             random_int(0, $field->corner()->row()),

@@ -8,7 +8,7 @@ namespace Stepanets\SeaBattle\Domain;
 
 interface Player
 {
-    public function shoot(Player $enemy): int;
+    public function shoot(Player $enemy): ShootResult;
 
-    public function field(): Field;
+    public function field(): TargetField;
 }

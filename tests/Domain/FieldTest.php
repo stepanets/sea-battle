@@ -11,6 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Stepanets\SeaBattle\Domain\Coordinate;
 use Stepanets\SeaBattle\Domain\Field;
+use Stepanets\SeaBattle\Domain\Field\Matrix;
 use Stepanets\SeaBattle\Domain\Media;
 
 final class FieldTest extends TestCase
@@ -24,15 +25,19 @@ final class FieldTest extends TestCase
         $media = $this->getMockForAbstractClass(Media::class);
         $media->expects(self::once())
             ->method('drawField')
-            ->withConsecutive([
+            ->withConsecutive(
                 [
-                    [0 ,0 ,0, 0],
-                    [0 ,0 ,0, 0],
-                    [0 ,0 ,0, 0],
-                    [0 ,0 ,0, 0],
-                ], 'Foo', 4
-            ]);
-        (new Field(4, 4))->draw($media, 'Foo');
+                    [
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                        [0, 0, 0, 0],
+                    ],
+                    'Foo',
+                    4
+                ]
+            );
+        (new Field(Matrix::filled(4, 4, 0)))->draw($media, 'Foo');
     }
 
     /**
@@ -44,16 +49,20 @@ final class FieldTest extends TestCase
         $media = $this->getMockForAbstractClass(Media::class);
         $media->expects(self::once())
             ->method('drawField')
-            ->withConsecutive([
+            ->withConsecutive(
                 [
-                    [0 ,0 ,0, 0, 0],
-                    [0 ,0 ,0, 0, 0],
-                    [0 ,0 ,0, 0, 0],
-                    [0 ,0 ,0, 0, 0],
-                    [0 ,0 ,0, 0, 0],
-                ], 'Bar', 5
-            ]);
-        (new Field(5, 5))->draw($media, 'Bar');
+                    [
+                        [0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0],
+                    ],
+                    'Bar',
+                    5
+                ]
+            );
+        (new Field(Matrix::filled(5, 5, 0)))->draw($media, 'Bar');
     }
 
     /**
@@ -73,7 +82,7 @@ final class FieldTest extends TestCase
             ]);
 
 
-        $field = new Field(2, 2);
+        $field = new Field(Matrix::filled(2, 2, 0));
         $field->placeShip(new Coordinate(0, 0));
         $field->draw($media, '');
     }
@@ -94,7 +103,7 @@ final class FieldTest extends TestCase
                 ], '', 2
             ]);
 
-        $field = new Field(2, 2);
+        $field = new Field(Matrix::filled(2, 2, 0));
         $field->placeShip(new Coordinate(0, 0), new Coordinate(0, 1));
         self::assertEquals(
             Field::SHOOT_DAMAGE,
@@ -119,7 +128,7 @@ final class FieldTest extends TestCase
                 ], '', 2
             ]);
 
-        $field = new Field(2, 2);
+        $field = new Field(Matrix::filled(2, 2, 0));
         $field->placeShip(new Coordinate(0, 0));
         self::assertEquals(
             Field::SHOOT_KILL,

@@ -9,6 +9,7 @@ namespace Stepanets\SeaBattle\Application\Players;
 use Stepanets\SeaBattle\Domain\Coordinate;
 use Stepanets\SeaBattle\Domain\CpuPlayer;
 use Stepanets\SeaBattle\Domain\Field;
+use Stepanets\SeaBattle\Domain\Field\Matrix;
 use Stepanets\SeaBattle\Domain\HumanPlayer;
 use Stepanets\SeaBattle\Domain\Player;
 use Stepanets\SeaBattle\Domain\Players;
@@ -18,7 +19,9 @@ final class HumanVsCpu implements Players
 {
     public function one(): Player
     {
-        $field = new Field(4, 4);
+        $field = new Field(
+            Matrix::zero(4, 4)
+        );
         foreach ($this->playerShips() as $ship) {
             $ship->place($field);
         }
@@ -27,7 +30,9 @@ final class HumanVsCpu implements Players
 
     public function two(): Player
     {
-        $field = new Field(4, 4);
+        $field = new Field(
+            Matrix::zero(4, 4)
+        );
         foreach ($this->cpuShips() as $ship) {
             $ship->place($field);
         }

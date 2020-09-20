@@ -4,9 +4,7 @@
 namespace Stepanets\SeaBattle\Domain;
 
 
-use InvalidArgumentException;
-
-use function array_fill;
+use Stepanets\SeaBattle\Domain\Field\Matrix;
 
 final class Field implements TargetField
 {
@@ -14,45 +12,35 @@ final class Field implements TargetField
     public const SHOOT_DAMAGE = 1;
     public const SHOOT_KILL = 2;
 
-    private const CELL_EMPTY = 0;
     private const CELL_SHIP = 1;
     private const CELL_DAMAGED_SHIP = 2;
 
-    private array $field = [];
+    /**
+     * @var Matrix
+     */
+    private Matrix $matrix;
 
-    private int $cols;
-    private int $rows;
-
-    public function __construct(int $rows, int $cols)
+    public function __construct(Matrix $matrix)
     {
-        $this->cols = $cols;
-        $this->rows = $rows;
-        $this->field = array_fill(
-            0,
-            $rows,
-            array_fill(0, $cols, self::CELL_EMPTY)
-        );
+        $this->matrix = $matrix;
     }
 
     public function corner(): Coordinate
     {
-        return new Coordinate($this->rows - 1, $this->cols - 1);
+        return new Coordinate($this->matrix->rows() - 1, $this->matrix->cols() - 1);
     }
 
     public function placeShip(Coordinate ...$coords): void
     {
         foreach ($coords as $pair) {
-            if (!isset($this->field[$r = $pair->row()][$c = $pair->col()])) {
-                throw new InvalidArgumentException(sprintf('Coordinate %s is out of the field', $pair));
-            }
-            $this->field[$pair->row()][$pair->col()] = 1;
+            $this->matrix->markCell($pair, self::CELL_SHIP);
         }
     }
 
     public function handleShoot(Coordinate $pair): int
     {
-        if ($this->field[$r = $pair->row()][$c = $pair->col()] === self::CELL_SHIP) {
-            $this->field[$r][$c] = self::CELL_DAMAGED_SHIP;
+        if ($this->matrix->code($pair) === self::CELL_SHIP) {
+            $this->matrix->markCell($pair, self::CELL_DAMAGED_SHIP);
             return $this->hasNeighborOfType($pair, self::CELL_SHIP) ? self::SHOOT_DAMAGE : self::SHOOT_KILL;
         }
 
@@ -61,29 +49,19 @@ final class Field implements TargetField
 
     public function allDestroyed(): bool
     {
-        foreach ($this->field as $row) {
-            foreach ($row as $cell) {
-                if ($cell === 1) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return !$this->matrix->has(self::CELL_SHIP);
     }
 
     public function draw(Media $media, string $title): void
     {
-        $media->drawField($this->field, $title, $this->cols);
+        $media->drawField($this->matrix->asArray(), $title, $this->matrix->cols());
     }
 
     private function hasNeighborOfType(Coordinate $pair, int $type): bool
     {
-        for ($i = $pair->row() - 1; $i <= $pair->row() + 1; ++$i) {
-            for ($j = $pair->col() - 1; $j <= $pair->col() + 1; ++$j) {
-                if (isset($this->field[$i][$j]) && $type === $this->field[$i][$j]) {
-                    return true;
-                }
+        foreach ($this->matrix->neighbors($pair) as $neighbor) {
+            if ($this->matrix->code($neighbor) === $type) {
+                return true;
             }
         }
 

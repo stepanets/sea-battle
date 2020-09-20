@@ -13,6 +13,7 @@ use function in_array;
 use function preg_split;
 use function range;
 use function sprintf;
+use function strtoupper;
 
 final class Coordinate
 {
@@ -27,13 +28,13 @@ final class Coordinate
             throw new InvalidArgumentException("Row must be more than 0, $r given");
         }
 
-        if (!in_array($char, $alfa = range('A', 'Z'), true)) {
+        if (!in_array($upChar = strtoupper($char), $alfa = range('A', 'Z'), true)) {
             throw new InvalidArgumentException("Column must be between A and Z, $char given");
         }
 
         return new self(
             $r - 1,
-            array_search($char, range('A', 'Z'), true)
+            array_search($upChar, range('A', 'Z'), true)
         );
     }
 
@@ -67,7 +68,7 @@ final class Coordinate
     {
         return sprintf(
             '%d%s',
-            $this->row,
+            $this->row + 1,
             range('A', 'Z')[$this->col]
         );
     }
