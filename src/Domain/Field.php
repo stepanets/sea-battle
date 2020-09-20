@@ -5,9 +5,10 @@ namespace Stepanets\SeaBattle\Domain;
 
 
 use InvalidArgumentException;
+
 use function array_fill;
 
-final class Field
+final class Field implements TargetField
 {
     public const SHOOT_MISS = 0;
     public const SHOOT_DAMAGE = 1;

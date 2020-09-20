@@ -30,6 +30,20 @@ final class CoordinateTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider StringAndInt
+     * @param string $pair
+     * @param int $row
+     * @param int $col
+     */
+    public function testToString(string $pair, int $row, int $col): void
+    {
+        self::assertEquals(
+            $pair,
+            (string)(new Coordinate($row, $col))
+        );
+    }
+
     public function StringAndInt(): array
     {
         return [
@@ -37,6 +51,7 @@ final class CoordinateTest extends TestCase
             ['5J', 4, 9],
             ['3C', 2, 2],
             ['10A', 9, 0],
+            ['1J', 0, 9],
         ];
     }
 }
