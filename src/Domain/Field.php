@@ -52,7 +52,7 @@ final class Field
     {
         if ($this->field[$r = $pair->row()][$c = $pair->col()] === self::CELL_SHIP) {
             $this->field[$r][$c] = self::CELL_DAMAGED_SHIP;
-            return $this->checkKilled($pair) ? self::SHOOT_KILL : self::SHOOT_DAMAGE;
+            return $this->hasNeighborOfType($pair, self::CELL_SHIP) ? self::SHOOT_DAMAGE : self::SHOOT_KILL;
         }
 
         return self::SHOOT_MISS;
@@ -76,16 +76,16 @@ final class Field
         $media->drawField($this->field, $title, $this->cols);
     }
 
-    private function checkKilled(Coordinate $pair): bool
+    private function hasNeighborOfType(Coordinate $pair, int $type): bool
     {
-        for ($i = $pair->row() - 1; $i < $pair->row() + 1; ++$i) {
-            for ($j = $pair->col() - 1; $j < $pair->col() + 1; ++$j) {
-                if (isset($this->field[$i][$j]) && $this->field[$i][$j] === self::CELL_SHIP) {
-                    return false;
+        for ($i = $pair->row() - 1; $i <= $pair->row() + 1; ++$i) {
+            for ($j = $pair->col() - 1; $j <= $pair->col() + 1; ++$j) {
+                if (isset($this->field[$i][$j]) && $type === $this->field[$i][$j]) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 }

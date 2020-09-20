@@ -56,6 +56,9 @@ final class FieldTest extends TestCase
         (new Field(5, 5))->draw($media, 'Bar');
     }
 
+    /**
+     * @throws Exception
+     */
     public function testPlaceShip(): void
     {
         /** @var Media & MockObject $media */
@@ -73,9 +76,11 @@ final class FieldTest extends TestCase
         $field = new Field(2, 2);
         $field->placeShip(new Coordinate(0, 0));
         $field->draw($media, '');
-
     }
 
+    /**
+     * @throws Exception
+     */
     public function testHandleShootDamaged(): void
     {
         /** @var Media & MockObject $media */
@@ -98,6 +103,9 @@ final class FieldTest extends TestCase
         $field->draw($media, '');
     }
 
+    /**
+     * @throws Exception
+     */
     public function testHandleShootKilled(): void
     {
         /** @var Media & MockObject $media */
