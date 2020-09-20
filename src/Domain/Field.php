@@ -78,13 +78,11 @@ final class Field
 
     private function checkKilled(Coordinate $pair): bool
     {
-        echo "\n";
         for ($i = $pair->row() - 1; $i < $pair->row() + 1; ++$i) {
             for ($j = $pair->col() - 1; $j < $pair->col() + 1; ++$j) {
                 if (isset($this->field[$i][$j]) && $this->field[$i][$j] === self::CELL_SHIP) {
                     return false;
                 }
-                echo "$i $j\n";
             }
         }
 
