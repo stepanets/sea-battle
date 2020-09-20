@@ -27,8 +27,8 @@ final class ConsoleMedia implements Media
             )
         );
         foreach ($field as $n => $row) {
-            $t = $t->addRow()->addColumn($n);
-            foreach ($row as $l => $cell) {
+            $t = $t->addRow()->addColumn($n + 1);
+            foreach ($row as $cell) {
                 $t->addColumn($cell);
             }
         }

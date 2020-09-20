@@ -4,43 +4,58 @@
 namespace Stepanets\SeaBattle\Domain;
 
 
-use function str_split;
+use InvalidArgumentException;
+use function array_fill;
 
 final class Field
 {
+    public const SHOOT_MISS = 0;
+    public const SHOOT_DAMAGE = 1;
+    public const SHOOT_KILL = 2;
+
+    private const CELL_EMPTY = 0;
+    private const CELL_SHIP = 1;
+    private const CELL_DAMAGED_SHIP = 2;
+
     private array $field = [];
 
     private int $cols;
+    private int $rows;
 
     public function __construct(int $rows, int $cols)
     {
-        $letters = range('A', 'Z');
-        for ($i = 1; $i <= $rows; ++$i) {
-            for ($j = 1; $j <= $cols; ++$j) {
-                $this->field[$i][$letters[$j - 1]] = 0;
-            }
-        }
         $this->cols = $cols;
+        $this->rows = $rows;
+        $this->field = array_fill(
+            0,
+            $rows,
+            array_fill(0, $cols, self::CELL_EMPTY)
+        );
     }
 
-    public function placeShip(array $coords): void
+    public function corner(): Coordinate
+    {
+        return new Coordinate($this->rows - 1, $this->cols - 1);
+    }
+
+    public function placeShip(Coordinate ...$coords): void
     {
         foreach ($coords as $pair) {
-            [$row, $col] = str_split($pair);
-            $this->field[$row][$col] = 1;
+            if (!isset($this->field[$r = $pair->row()][$c = $pair->col()])) {
+                throw new InvalidArgumentException(sprintf('Coordinate %s is out of the field', $pair));
+            }
+            $this->field[$pair->row()][$pair->col()] = 1;
         }
     }
 
-    public function handleShoot(string $pair): bool
+    public function handleShoot(Coordinate $pair): int
     {
-        [$r, $c] = str_split($pair);
-
-        if ($this->field[$r][$c] === 1) {
-            $this->field[$r][$c] = 2;
-            return true;
+        if ($this->field[$r = $pair->row()][$c = $pair->col()] === self::CELL_SHIP) {
+            $this->field[$r][$c] = self::CELL_DAMAGED_SHIP;
+            return $this->checkKilled($pair) ? self::SHOOT_KILL : self::SHOOT_DAMAGE;
         }
 
-        return false;
+        return self::SHOOT_MISS;
     }
 
     public function allDestroyed(): bool
@@ -59,5 +74,20 @@ final class Field
     public function draw(Media $media, string $title): void
     {
         $media->drawField($this->field, $title, $this->cols);
+    }
+
+    private function checkKilled(Coordinate $pair): bool
+    {
+        echo "\n";
+        for ($i = $pair->row() - 1; $i < $pair->row() + 1; ++$i) {
+            for ($j = $pair->col() - 1; $j < $pair->col() + 1; ++$j) {
+                if (isset($this->field[$i][$j]) && $this->field[$i][$j] === self::CELL_SHIP) {
+                    return false;
+                }
+                echo "$i $j\n";
+            }
+        }
+
+        return true;
     }
 }
