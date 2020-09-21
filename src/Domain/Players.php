@@ -8,7 +8,7 @@ namespace Stepanets\SeaBattle\Domain;
 
 interface Players
 {
-    public function one(): Player;
+    public function first(): Player;
 
-    public function two(): Player;
+    public function second(): Player;
 }

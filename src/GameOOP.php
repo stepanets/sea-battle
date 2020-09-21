@@ -36,9 +36,9 @@ final class GameOOP
      */
     public function run(): void
     {
-        $human = $this->players->one();
+        $human = $this->players->first();
         $human->field()->draw($this->media, 'Player field');
-        $cpu = $this->players->two();
+        $cpu = $this->players->second();
         $cpu->field()->draw($this->media, 'CPU field');
 
         $map = new Map(Matrix::zero(4, 4));

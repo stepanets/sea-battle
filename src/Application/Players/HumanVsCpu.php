@@ -17,7 +17,7 @@ use Stepanets\SeaBattle\Domain\Ship;
 
 final class HumanVsCpu implements Players
 {
-    public function one(): Player
+    public function first(): Player
     {
         $field = new Field(
             Matrix::zero(4, 4)
@@ -28,7 +28,7 @@ final class HumanVsCpu implements Players
         return new HumanPlayer($field);
     }
 
-    public function two(): Player
+    public function second(): Player
     {
         $field = new Field(
             Matrix::zero(4, 4)
