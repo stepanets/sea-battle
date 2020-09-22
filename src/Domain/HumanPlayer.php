@@ -33,7 +33,7 @@ final class HumanPlayer implements Player
             )) ? new ResultMiss($pair) : new ResultDamage($pair);
     }
 
-    public function field(): Field
+    public function field(): TargetField
     {
         return $this->field;
     }

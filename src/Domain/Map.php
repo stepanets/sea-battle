@@ -23,6 +23,11 @@ final class Map
         $this->matrix = $matrix;
     }
 
+    public function matrix(): Matrix
+    {
+        return clone $this->matrix;
+    }
+
     public function markMiss(Coordinate $pair): void
     {
         $this->matrix->markCell($pair, self::CELL_MISSED);
